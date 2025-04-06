@@ -1,8 +1,20 @@
 export interface EventData {
-  eventId: string;
+  eventId: string; // Partition Key
+  /* Sort Keys */
   core: CoreData;
+  // Todo - Add sync data
+  // Todo - bundles data
+  // For bundles and invitations items
+  [key: string]: any
 }
-
+export interface CoreData {
+  generalData: GeneralData;
+  eventDates: Array<{ [key: string]: string | { [key: string]: string } }>;
+  quotes: {
+    [key: string]: number;
+  };
+  status: EventStatus;
+}
 export interface GeneralData {
   country: string;
   venue: string;
@@ -23,11 +35,8 @@ export interface GeneralData {
   modifiedBy: string;
   tag: string;
   startDate: string;
-}
-
-export interface CoreData {
-  generalData: GeneralData;
-  status: EventStatus;
+  eventCode: string;
+  // Todo - Add gates or entrances
 }
 
 type EventStatus = "Upcoming" | "Draft" | "Active" | "In Progress" | "Trash";
