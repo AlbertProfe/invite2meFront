@@ -8,93 +8,22 @@ import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import PaletteIcon from '@mui/icons-material/Palette';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { useState } from 'react';
+import { useEventStorageContext } from '../components/EventDetails/Context/EventStorageContext';
+import { EventStatus } from '../model/EventDataModel/sortKeys/CoreData';
 
-type EventStatus = 'Upcoming' | 'Draft' | 'Active';
-
-interface EventData {
-  title: string;
-  date: string;
-  guests: number;
-  status: EventStatus;
+function parseDate(dateString: string) {
+  const date = new Date(dateString);
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+  return date.toLocaleDateString('en-US', options);
 }
 
-interface EventData {
-  id: string;
-  title: string;
-  date: string;
-  guests: number;
-  status: EventStatus;
-  image: string;
-  type: 'music' | 'art' | 'conference';
-  location: string;
-}
-
-const mockEvents: EventData[] = [
-  { 
-    id: "1",
-    title: "Primavera Sound 2025", 
-    date: "May 25-30, 2025", 
-    guests: 1500, 
-    status: "Upcoming",
-    image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&auto=format&fit=crop",
-    type: "music",
-    location: "Barcelona, Spain"
-  },
-  { 
-    id: "2",
-    title: "Modern Art Exhibition", 
-    date: "April 10-20, 2025", 
-    guests: 500, 
-    status: "Draft",
-    image: "https://images.unsplash.com/photo-1561488111-5d800fd56b8a?w=800&auto=format&fit=crop",
-    type: "art",
-    location: "MNAC, Barcelona"
-  },
-  { 
-    id: "3",
-    title: "Cruïlla Festival", 
-    date: "July 15-17, 2025", 
-    guests: 800, 
-    status: "Upcoming",
-    image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&auto=format&fit=crop",
-    type: "music",
-    location: "Parc del Fòrum, Barcelona"
-  },
-  { 
-    id: "4",
-    title: "Contemporary Art Show", 
-    date: "March 20-25, 2025", 
-    guests: 300, 
-    status: "Active",
-    image: "https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=800&auto=format&fit=crop",
-    type: "art",
-    location: "MNAC, Barcelona"
-  },
-  { 
-    id: "5",
-    title: "Electronic Music Night", 
-    date: "March 18, 2025", 
-    guests: 400, 
-    status: "Active",
-    image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop",
-    type: "music",
-    location: "Barcelona, Spain"
-  },
-  { 
-    id: "6",
-    title: "Art Workshop Series", 
-    date: "May 1-3, 2025", 
-    guests: 75, 
-    status: "Draft",
-    image: "https://images.unsplash.com/photo-1580136579312-94651dfd596d?w=800&auto=format&fit=crop",
-    type: "art",
-    location: "MNAC, Barcelona"
-  },
-];
 
 const Events = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<EventStatus>('Active');
+  const { events } = useEventStorageContext();
+
+  console.log('Events:', events);
 
   const handleCreateEvent = () => {
     navigate('/event/new');
@@ -104,7 +33,7 @@ const Events = () => {
     navigate(`/event/${eventId}`);
   };
 
-  const filteredEvents = mockEvents.filter(event => event.status === activeTab);
+  const filteredEvents = events.filter(event => event.core.status === activeTab);
 
   return (
     <Box>
@@ -164,7 +93,7 @@ const Events = () => {
                     <PlayArrowIcon sx={{ fontSize: 20 }} />
                     <span>Active</span>
                     <Chip 
-                      label={mockEvents.filter(e => e.status === 'Active').length} 
+                      label={events.filter(e => e.core.status === 'Active').length} 
                       size="small" 
                       sx={{ 
                         ml: 1, 
@@ -182,7 +111,7 @@ const Events = () => {
                     <AccessTimeIcon sx={{ fontSize: 20 }} />
                     <span>Upcoming</span>
                     <Chip 
-                      label={mockEvents.filter(e => e.status === 'Upcoming').length} 
+                      label={events.filter(e => e.core.status === 'Upcoming').length} 
                       size="small" 
                       sx={{ 
                         ml: 1, 
@@ -200,7 +129,7 @@ const Events = () => {
                     <EditIcon sx={{ fontSize: 20 }} />
                     <span>Draft</span>
                     <Chip 
-                      label={mockEvents.filter(e => e.status === 'Draft').length} 
+                      label={events.filter(e => e.core.status === 'Draft').length} 
                       size="small" 
                       sx={{ 
                         ml: 1, 
@@ -226,15 +155,15 @@ const Events = () => {
           >
             {filteredEvents.map((event) => (
               <EventCard
-                key={event.id}
-                id={event.id}
-                title={event.title}
-                date={event.date}
-                guests={event.guests}
-                status={event.status}
-                image={event.image}
-                type={event.type}
-                location={event.location}
+                key={event.eventId}
+                id={event.eventId}
+                title={event.core.generalData.name}
+                date={parseDate(event.core.generalData.startDate)}
+                guests={0} // Placeholder for guests count
+                status={event.core.status}
+                image={event.core.generalData.previewImageUrl}
+                type={event.core.generalData.type}
+                location={`${event.core.generalData.city}, ${event.core.generalData.country}`}
                 onClick={handleEventClick}
               />
             ))}
@@ -252,7 +181,7 @@ interface EventCardProps {
   guests: number;
   status: EventStatus;
   image: string;
-  type: 'music' | 'art' | 'conference';
+  type: 'music' | 'art' | 'conference' | any; // To Do: Define event types
   location: string;
   onClick: (id: string) => void;
 }
