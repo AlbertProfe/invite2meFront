@@ -1,9 +1,12 @@
 export interface EventData {
-  eventId: string; // Partition Key
+  /* Partition key */
+  eventId: string; 
   /* Sort Keys */
   core: CoreData;
-  // Todo - Add sync data
+  sync: SyncData;
   // Todo - bundles data
+  statistics: Statistics;
+  artists: Artists;
   // For bundles and invitations items
   [key: string]: any
 }
@@ -40,3 +43,52 @@ export interface GeneralData {
 }
 
 type EventStatus = "Upcoming" | "Draft" | "Active" | "In Progress" | "Trash";
+
+export interface SyncData {
+  timestamps: {
+    core: string;
+    bundles: string;
+    artists: string;
+    statistics: string;
+    // For bundles and invitations items
+    [key: string]: string;
+  }
+}
+
+export interface Statistics {
+  statisticsData: StatisticsData;
+}
+
+export interface StatisticsData {
+  openRate: number;
+  totalScans: number;
+  attendanceRate: number;
+}
+export interface Artists {
+  artists: string,
+  artistsQty: number
+}
+
+export interface Artist {
+  headliner: boolean;
+  genre: string;
+  name: string;
+  id: string
+}
+
+
+
+// const mockEventData : EventData[] = [];
+
+// const event1 : EventData = {
+//   eventId: "EVENT_001",
+//   core: {
+//     generalData: {
+//     },
+//     eventDates: [],
+//     quotes: {
+//       "FastTrack": 100,
+//     },
+//     status: "Upcoming",
+//   }
+// }
