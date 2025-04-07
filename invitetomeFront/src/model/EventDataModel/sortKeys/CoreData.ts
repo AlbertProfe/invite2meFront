@@ -31,5 +31,5 @@ export interface CoreData {
     gates: string[];
   }
   
-  type EventStatus = "Upcoming" | "Draft" | "Active" | "In Progress" | "Trash";
+  export type EventStatus = "Upcoming" | "Draft" | "Active" | "In Progress" | "Trash";
   
