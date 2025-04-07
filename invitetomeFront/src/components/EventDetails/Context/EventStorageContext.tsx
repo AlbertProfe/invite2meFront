@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import { EventData } from "../../../model/EventDataModel/EventData";
+import { mockEventsData } from "../../../model/EventDataModel/MockData";
 
 interface EventStorageContextType {
   events: EventData[];
@@ -8,7 +9,7 @@ interface EventStorageContextType {
     getEventById: (id: string) => EventData | undefined;
     updateEvent: (event: EventData) => void;
     removeEvent: (id: string) => void;
-  }
+  };
 }
 
 const EventStorageContext = createContext<EventStorageContextType | undefined>(
@@ -25,14 +26,24 @@ export const useEventStorageContext = () => {
   return context;
 };
 
-// Initialize events from local storage
 const initializeEvents = () => {
+  // Arrays of event ids stored in local storage
   const storedIds = JSON.parse(
     localStorage.getItem("eventIds") || "[]"
   ) as string[];
+  // If no ids are found, return mock data and store them in local storage
+  if (storedIds.length === 0) {
+    const mockData = mockEventsData.map((event) => {
+      localStorage.setItem(event.eventId, JSON.stringify(event));
+      return event.eventId;
+    });
+    localStorage.setItem("eventIds", JSON.stringify(mockData));
+    return mockEventsData;
+  }
+  // If ids are found, retrieve the events from local storage
   return storedIds
     .map((id) => {
-      const eventData = localStorage.getItem(`event_${id}`);
+      const eventData = localStorage.getItem(id);
       return eventData ? JSON.parse(eventData) : null;
     })
     .filter(Boolean) as EventData[];
@@ -52,7 +63,7 @@ export const EventStorageProvider: React.FC<{ children: React.ReactNode }> = ({
           "eventIds",
           JSON.stringify(updatedEvents.map((e) => e.eventId))
         );
-        localStorage.setItem(`event_${event.eventId}`, JSON.stringify(event));
+        localStorage.setItem(event.eventId, JSON.stringify(event));
         return updatedEvents;
       });
     },
@@ -63,7 +74,7 @@ export const EventStorageProvider: React.FC<{ children: React.ReactNode }> = ({
           event.eventId === updatedEvent.eventId ? updatedEvent : event
         );
         localStorage.setItem(
-          `event_${updatedEvent.eventId}`,
+          updatedEvent.eventId,
           JSON.stringify(updatedEvent)
         );
         return updatedEvents;
@@ -71,19 +82,19 @@ export const EventStorageProvider: React.FC<{ children: React.ReactNode }> = ({
     },
     removeEvent: (id: string) => {
       setEvents((prevEvents) => {
-        const updatedEvents = prevEvents.filter((event) => event.eventId !== id);
+        const updatedEvents = prevEvents.filter(
+          (event) => event.eventId !== id
+        );
         const updatedIds = updatedEvents.map((e) => e.eventId);
         localStorage.setItem("eventIds", JSON.stringify(updatedIds));
-        localStorage.removeItem(`event_${id}`);
+        localStorage.removeItem(id);
         return updatedEvents;
       });
     },
-  }
+  };
 
   return (
-    <EventStorageContext.Provider
-      value={{ events, eventStorageApi }}
-    >
+    <EventStorageContext.Provider value={{ events, eventStorageApi }}>
       {children}
     </EventStorageContext.Provider>
   );
