@@ -18,17 +18,5 @@ export interface EventData {
   [key: string]: Bundle | Invitation | any;
 }
 
-// const mockEventData : EventData[] = [];
+// Mock data
 
-// const event1 : EventData = {
-//   eventId: "EVENT_001",
-//   core: {
-//     generalData: {
-//     },
-//     eventDates: [],
-//     quotes: {
-//       "FastTrack": 100,
-//     },
-//     status: "Upcoming",
-//   }
-// }

@@ -27,6 +27,7 @@ export interface CoreData {
     tag: string;
     startDate: string;
     eventCode: string;
+    previewImageUrl: string;
     // Todo - Add gates or entrances
   }
   

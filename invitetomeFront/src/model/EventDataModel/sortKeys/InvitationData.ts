@@ -12,6 +12,6 @@ export interface Invitation {
     qrValidated: boolean;
   }
   
-  type InvitationType = "PERSONAL" | "FAMILY" | "BUSINESS"
+  type InvitationType = "PERSONAL" | "FAMILY" | "BUSINESS" | "OTHER"
   type InvitationStatus = "Draft" | "Aproved" | "Sent" | "Open" | "Error"
   
