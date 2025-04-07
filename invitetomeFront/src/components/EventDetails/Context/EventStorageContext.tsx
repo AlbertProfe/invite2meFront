@@ -3,10 +3,12 @@ import { EventData } from "../../../model/EventData";
 
 interface EventStorageContextType {
   events: EventData[];
-  addEvent: (event: EventData) => void;
-  getEventById: (id: string) => EventData | undefined;
-  updateEvent: (updatedEvent: EventData) => void;
-  removeEvent: (id: string) => void;
+  eventStorageApi: {
+    addEvent: (event: EventData) => void;
+    getEventById: (id: string) => EventData | undefined;
+    updateEvent: (event: EventData) => void;
+    removeEvent: (id: string) => void;
+  }
 }
 
 const EventStorageContext = createContext<EventStorageContextType | undefined>(
@@ -42,48 +44,45 @@ export const EventStorageProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [events, setEvents] = useState<EventData[]>(initializeEvents);
 
-  const addEvent = (event: EventData) => {
-    setEvents((prevEvents) => {
-      const updatedEvents = [...prevEvents, event];
-      localStorage.setItem(
-        "eventIds",
-        JSON.stringify(updatedEvents.map((e) => e.eventId))
-      );
-      localStorage.setItem(`event_${event.eventId}`, JSON.stringify(event));
-      return updatedEvents;
-    });
-  };
-
-  const getEventById = (id: string) => {
-    return events.find((event) => event.eventId === id);
-  };
-
-  const updateEvent = (updatedEvent: EventData) => {
-    setEvents((prevEvents) => {
-      const updatedEvents = prevEvents.map((event) =>
-        event.eventId === updatedEvent.eventId ? updatedEvent : event
-      );
-      localStorage.setItem(
-        `event_${updatedEvent.eventId}`,
-        JSON.stringify(updatedEvent)
-      );
-      return updatedEvents;
-    });
-  };
-
-  const removeEvent = (id: string) => {
-    setEvents((prevEvents) => {
-      const updatedEvents = prevEvents.filter((event) => event.eventId !== id);
-      const updatedIds = updatedEvents.map((e) => e.eventId);
-      localStorage.setItem("eventIds", JSON.stringify(updatedIds));
-      localStorage.removeItem(`event_${id}`);
-      return updatedEvents;
-    });
-  };
+  const eventStorageApi = {
+    addEvent: (event: EventData) => {
+      setEvents((prevEvents) => {
+        const updatedEvents = [...prevEvents, event];
+        localStorage.setItem(
+          "eventIds",
+          JSON.stringify(updatedEvents.map((e) => e.eventId))
+        );
+        localStorage.setItem(`event_${event.eventId}`, JSON.stringify(event));
+        return updatedEvents;
+      });
+    },
+    getEventById: (id: string) => events.find((event) => event.eventId === id),
+    updateEvent: (updatedEvent: EventData) => {
+      setEvents((prevEvents) => {
+        const updatedEvents = prevEvents.map((event) =>
+          event.eventId === updatedEvent.eventId ? updatedEvent : event
+        );
+        localStorage.setItem(
+          `event_${updatedEvent.eventId}`,
+          JSON.stringify(updatedEvent)
+        );
+        return updatedEvents;
+      });
+    },
+    removeEvent: (id: string) => {
+      setEvents((prevEvents) => {
+        const updatedEvents = prevEvents.filter((event) => event.eventId !== id);
+        const updatedIds = updatedEvents.map((e) => e.eventId);
+        localStorage.setItem("eventIds", JSON.stringify(updatedIds));
+        localStorage.removeItem(`event_${id}`);
+        return updatedEvents;
+      });
+    },
+  }
 
   return (
     <EventStorageContext.Provider
-      value={{ events, addEvent, getEventById, updateEvent, removeEvent }}
+      value={{ events, eventStorageApi }}
     >
       {children}
     </EventStorageContext.Provider>
