@@ -28,7 +28,7 @@ export interface CoreData {
     startDate: string;
     eventCode: string;
     previewImageUrl: string;
-    // Todo - Add gates or entrances
+    gates: string[];
   }
   
   type EventStatus = "Upcoming" | "Draft" | "Active" | "In Progress" | "Trash";

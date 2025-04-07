@@ -17,6 +17,3 @@ export interface EventData {
   // For bundles and invitations items
   [key: string]: Bundle | Invitation | any;
 }
-
-// Mock data
-

@@ -1,5 +1,5 @@
 export interface ArtistsData {
-  artists: string,
+  artists: Artist[];
   artistsQty: number
 }
 
@@ -7,5 +7,6 @@ export interface Artist {
   headliner: boolean;
   genre: string;
   name: string;
-  id: string
+  id: number
+  festivals?: { [key: string]: string };
 }
