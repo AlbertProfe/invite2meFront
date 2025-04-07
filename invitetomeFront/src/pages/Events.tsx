@@ -23,8 +23,6 @@ const Events = () => {
   const [activeTab, setActiveTab] = useState<EventStatus>('Active');
   const { events } = useEventStorageContext();
 
-  console.log('Events:', events);
-
   const handleCreateEvent = () => {
     navigate('/event/new');
   };
