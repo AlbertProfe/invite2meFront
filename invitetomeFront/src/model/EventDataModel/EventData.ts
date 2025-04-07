@@ -9,7 +9,7 @@ export interface EventData {
   /* Partition key */
   eventId: string; 
   /* Sort Keys */
-  SortKey: CoreData;
+  core: CoreData;
   sync: SyncData;
   // Todo - bundles data
   statistics: Statistics;
