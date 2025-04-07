@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { EventData } from "../../../model/EventData";
+import { EventData } from "../../../model/EventDataModel/EventData";
 
 interface EventStorageContextType {
   events: EventData[];
