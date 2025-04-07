@@ -2,14 +2,15 @@ export interface EventData {
   /* Partition key */
   eventId: string; 
   /* Sort Keys */
-  core: CoreData;
+  SortKey: CoreData;
   sync: SyncData;
   // Todo - bundles data
   statistics: Statistics;
-  artists: Artists;
+  artists: ArtistsData;
   // For bundles and invitations items
-  [key: string]: any
+  [key: string]: Bundle | Invitation | any;
 }
+
 export interface CoreData {
   generalData: GeneralData;
   eventDates: Array<{ [key: string]: string | { [key: string]: string } }>;
@@ -64,7 +65,8 @@ export interface StatisticsData {
   totalScans: number;
   attendanceRate: number;
 }
-export interface Artists {
+
+export interface ArtistsData {
   artists: string,
   artistsQty: number
 }
@@ -76,7 +78,40 @@ export interface Artist {
   id: string
 }
 
+export interface Bundle {
+  accepted: number,
+  sent: number,
+  totatlInvitations: number,
+  contacts: Contact[],
+  templates: Template[]
+}
 
+export interface Contact {
+  name: string;
+  email: string;
+}
+
+export interface Template {
+  subject: string;
+  id: string;
+  body: string;
+}
+
+export interface Invitation {
+  type: InvitationType;
+  status: InvitationStatus;
+  sentDate: string;
+  phone: string;
+  emailSent: boolean;
+  emailOpened: boolean;
+  name: string;
+  emailReceived: boolean;
+  bundle: string;
+  email: string;
+  qrValidated: boolean;
+}
+type InvitationType = "PERSONAL" | "FAMILY" | "BUSINESS"
+type InvitationStatus = "Draft" | "Aproved" | "Sent" | "Open" | "Error"
 
 // const mockEventData : EventData[] = [];
 
