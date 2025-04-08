@@ -22,6 +22,7 @@ import Contacts from './pages/Contacts';
 import './App.css'
 
 import { EventStorageProvider } from './components/EventDetails/Context/EventStorageContext';
+import { EventDetailProvider } from './components/EventDetails/Context/EventDetailContext';
 
 const theme = createTheme({
   palette: {
@@ -177,111 +178,113 @@ function App() {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <CssBaseline />
         <EventStorageProvider>
-          <Router>
-            <Box sx={{ display: 'flex' }}>
-              {/* Mobile menu button */}
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={handleDrawerToggle}
-                sx={{ 
-                  mr: 2, 
-                  display: { sm: 'none' }, 
-                  position: 'fixed', 
-                  top: 16, 
-                  left: 16, 
-                  zIndex: 1200,
-                  bgcolor: 'white',
-                  boxShadow: 1,
-                  '&:hover': { bgcolor: 'white' }
-                }}
-              >
-                <MenuIcon />
-              </IconButton>
-
-            {/* Desktop toggle button (when drawer is closed) */}
-            {!isDrawerOpen && (
-              <Tooltip title="Open menu" placement="right">
+          <EventDetailProvider>
+            <Router>
+              <Box sx={{ display: 'flex' }}>
+                {/* Mobile menu button */}
                 <IconButton
                   color="inherit"
                   aria-label="open drawer"
-                  onClick={handleDesktopDrawerToggle}
+                  edge="start"
+                  onClick={handleDrawerToggle}
                   sx={{ 
-                    display: { xs: 'none', sm: 'flex' }, 
-                    position: 'fixed',
-                    top: 16,
-                    left: 16,
+                    mr: 2, 
+                    display: { sm: 'none' }, 
+                    position: 'fixed', 
+                    top: 16, 
+                    left: 16, 
                     zIndex: 1200,
                     bgcolor: 'white',
                     boxShadow: 1,
                     '&:hover': { bgcolor: 'white' }
                   }}
                 >
-                  <MenuOpenIcon />
+                  <MenuIcon />
                 </IconButton>
-              </Tooltip>
-            )}
 
-            {/* Mobile drawer */}
-            <Drawer
-              variant="temporary"
-              open={mobileOpen}
-              onClose={handleDrawerToggle}
-              ModalProps={{ keepMounted: true }}
-              sx={{
-                display: { xs: 'block', sm: 'none' },
-                '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH },
-              }}
-            >
-              <DrawerContent />
-            </Drawer>
+              {/* Desktop toggle button (when drawer is closed) */}
+              {!isDrawerOpen && (
+                <Tooltip title="Open menu" placement="right">
+                  <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    onClick={handleDesktopDrawerToggle}
+                    sx={{ 
+                      display: { xs: 'none', sm: 'flex' }, 
+                      position: 'fixed',
+                      top: 16,
+                      left: 16,
+                      zIndex: 1200,
+                      bgcolor: 'white',
+                      boxShadow: 1,
+                      '&:hover': { bgcolor: 'white' }
+                    }}
+                  >
+                    <MenuOpenIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
 
-            {/* Desktop drawer */}
-            <Drawer
-              variant="permanent"
-              sx={{
-                display: { xs: 'none', sm: 'block' },
-                '& .MuiDrawer-paper': {
-                  boxSizing: 'border-box',
-                  width: isDrawerOpen ? DRAWER_WIDTH : 73,
-                  borderRight: '1px solid',
-                  borderColor: 'divider',
-                  transition: theme.transitions.create('width', {
+              {/* Mobile drawer */}
+              <Drawer
+                variant="temporary"
+                open={mobileOpen}
+                onClose={handleDrawerToggle}
+                ModalProps={{ keepMounted: true }}
+                sx={{
+                  display: { xs: 'block', sm: 'none' },
+                  '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH },
+                }}
+              >
+                <DrawerContent />
+              </Drawer>
+
+              {/* Desktop drawer */}
+              <Drawer
+                variant="permanent"
+                sx={{
+                  display: { xs: 'none', sm: 'block' },
+                  '& .MuiDrawer-paper': {
+                    boxSizing: 'border-box',
+                    width: isDrawerOpen ? DRAWER_WIDTH : 73,
+                    borderRight: '1px solid',
+                    borderColor: 'divider',
+                    transition: theme.transitions.create('width', {
+                      easing: theme.transitions.easing.sharp,
+                      duration: theme.transitions.duration.enteringScreen,
+                    }),
+                    overflowX: 'hidden',
+                  },
+                }}
+                open={isDrawerOpen}
+              >
+                <DrawerContent />
+              </Drawer>
+
+              <Box
+                component="main"
+                sx={{
+                  flexGrow: 1,
+                  width: { sm: `calc(100% - ${isDrawerOpen ? DRAWER_WIDTH : 73}px)` },
+                  ml: { sm: `${isDrawerOpen ? DRAWER_WIDTH : 73}px` },
+                  transition: theme.transitions.create(['width', 'margin-left'], {
                     easing: theme.transitions.easing.sharp,
                     duration: theme.transitions.duration.enteringScreen,
-                  }),
-                  overflowX: 'hidden',
-                },
-              }}
-              open={isDrawerOpen}
-            >
-              <DrawerContent />
-            </Drawer>
-
-            <Box
-              component="main"
-              sx={{
-                flexGrow: 1,
-                width: { sm: `calc(100% - ${isDrawerOpen ? DRAWER_WIDTH : 73}px)` },
-                ml: { sm: `${isDrawerOpen ? DRAWER_WIDTH : 73}px` },
-                transition: theme.transitions.create(['width', 'margin-left'], {
-                  easing: theme.transitions.easing.sharp,
-                  duration: theme.transitions.duration.enteringScreen,
-                })
-              }}
-            >
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/events" element={<Events />} />
-                <Route path="/templates" element={<Templates />} />
-                <Route path="/event/new" element={<EventDetail />} />
-                <Route path="/contacts" element={<Contacts />} />
-                <Route path="/event/:id" element={<EventDetail />} />
-              </Routes>
+                  })
+                }}
+              >
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/events" element={<Events />} />
+                  <Route path="/templates" element={<Templates />} />
+                  <Route path="/event/new" element={<EventDetail />} />
+                  <Route path="/contacts" element={<Contacts />} />
+                  <Route path="/event/:id" element={<EventDetail />} />
+                </Routes>
+              </Box>
             </Box>
-          </Box>
-        </Router>
+            </Router>
+          </EventDetailProvider>
       </EventStorageProvider>
       </LocalizationProvider>
     </ThemeProvider>
