@@ -2,7 +2,7 @@ import React, { createContext, useContext, useReducer } from "react";
 import { EventData } from "../../../model/EventDataModel/EventData";
 
 interface EventDetailContextType {
-  event: EventData;
+  currentEvent: EventData;
   dispatch: React.Dispatch<Action>;
 }
 
@@ -34,10 +34,10 @@ const eventReducer = (state: EventData, action: Action) => {
 export const EventDetailProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [event, dispatch] = useReducer(eventReducer, {} as EventData);
+  const [currentEvent, dispatch] = useReducer(eventReducer, {} as EventData);
 
   return (
-    <EventDetailContext.Provider value={{ event, dispatch }}>
+    <EventDetailContext.Provider value={{ currentEvent, dispatch }}>
       {children}
     </EventDetailContext.Provider>
   );
