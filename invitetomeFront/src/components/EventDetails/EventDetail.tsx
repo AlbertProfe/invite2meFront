@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Drawer,
@@ -12,6 +12,9 @@ import {
 import { useParams } from "react-router-dom";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+
+import { useEventStorageContext } from "./Context/EventStorageContext";
+import { EventDetailProvider } from "./Context/EventDetailContext";
 
 // Import step components
 import GeneralInfo from "./Steps/GeneralInfo";
@@ -84,34 +87,37 @@ export const EventDetail = () => {
         >
           {drawerOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
         </IconButton>
-
+        
+        
         {/* Content based on active step will be rendered here */}
-        <Paper
-          elevation={0}
-          sx={{
-            p: 4,
-            borderRadius: 2,
-            m: 2,
-            bgcolor: "background.paper",
-            minHeight: "calc(100vh - 32px)",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
-          }}
-        >
-          <Typography variant="h4" sx={{ mb: 3 }}>
-            {isNewEvent ? "Create New Event" : "Edit Event"} -{" "}
-            {steps[activeStep]}
-          </Typography>
+        <EventDetailProvider id={id || ""}>
+          <Paper
+            elevation={0}
+            sx={{
+              p: 4,
+              borderRadius: 2,
+              m: 2,
+              bgcolor: "background.paper",
+              minHeight: "calc(100vh - 32px)",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
+            }}
+          >
+            <Typography variant="h4" sx={{ mb: 3 }}>
+              {isNewEvent ? "Create New Event" : "Edit Event"} -{" "}
+              {steps[activeStep]}
+            </Typography>
 
-          {/* Render step content */}
-          {activeStep === 0 && <GeneralInfo />}
-          {activeStep === 1 && <Calendar />}
-          {activeStep === 2 && <Artists />}
-          {activeStep === 3 && <Quotas />}
-          {activeStep === 4 && <Bundles />}
-          {activeStep === 5 && <Contacts />}
-          {activeStep === 6 && <Template />}
-          {activeStep === 7 && <Analytics />}
-        </Paper>
+            {/* Render step content */}
+            {activeStep === 0 && <GeneralInfo />}
+            {activeStep === 1 && <Calendar />}
+            {activeStep === 2 && <Artists />}
+            {activeStep === 3 && <Quotas />}
+            {activeStep === 4 && <Bundles />}
+            {activeStep === 5 && <Contacts />}
+            {activeStep === 6 && <Template />}
+            {activeStep === 7 && <Analytics />}
+          </Paper>
+        </EventDetailProvider>
       </Box>
 
       {/* Stepper Drawer */}

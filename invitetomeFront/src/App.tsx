@@ -178,8 +178,7 @@ function App() {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <CssBaseline />
         <EventStorageProvider>
-          <EventDetailProvider>
-            <Router>
+          <Router>
               <Box sx={{ display: 'flex' }}>
                 {/* Mobile menu button */}
                 <IconButton
@@ -283,8 +282,7 @@ function App() {
                 </Routes>
               </Box>
             </Box>
-            </Router>
-          </EventDetailProvider>
+          </Router>
       </EventStorageProvider>
       </LocalizationProvider>
     </ThemeProvider>
