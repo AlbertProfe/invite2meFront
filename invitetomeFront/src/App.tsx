@@ -21,8 +21,8 @@ import Contacts from './pages/Contacts';
 
 import './App.css'
 
-import { EventStorageProvider } from './components/EventDetails/Context/EventStorageContext';
-import { EventDetailProvider } from './components/EventDetails/Context/EventDetailContext';
+import { EventStorageProvider } from './components/EventDetails/EventContext/EventStorageContext';
+import { EventDetailProvider } from './components/EventDetails/EventContext/EventDetailContext';
 
 const theme = createTheme({
   palette: {
