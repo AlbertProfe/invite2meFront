@@ -1,6 +1,12 @@
 import { Box, TextField, Grid, Typography, Button } from "@mui/material";
+import { useEventDetailContext } from "../EventContext/EventDetailContext";
 
 export const GeneralInfo = () => {
+  
+  const { currentEvent } = useEventDetailContext();
+  
+  console.log(currentEvent);
+
   return (
     <Box component="form" noValidate autoComplete="off">
       <Grid container spacing={3}>
@@ -11,7 +17,7 @@ export const GeneralInfo = () => {
           </Typography>
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField fullWidth label="Event Name" variant="outlined" required />
+          <TextField value={currentEvent.core.generalData.name || ""} fullWidth label="Event Name" variant="outlined" required />
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField

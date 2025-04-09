@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Box,
   Drawer,
@@ -13,7 +13,6 @@ import { useParams } from "react-router-dom";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-import { useEventStorageContext } from "./EventContext/EventStorageContext";
 import { EventDetailProvider } from "./EventContext/EventDetailContext";
 
 // Import step components
