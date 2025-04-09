@@ -87,7 +87,7 @@ const emptyEventData: EventData = {
       yearEdition: 0,
       name: "",
       modifiedBy: "",
-      tag: "",
+      tags: [],
       startDate: "",
       eventCode: "",
       previewImageUrl: "",
