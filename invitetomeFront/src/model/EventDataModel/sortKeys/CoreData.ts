@@ -24,7 +24,7 @@ export interface CoreData {
     yearEdition: number;
     name: string;
     modifiedBy: string;
-    tag: string;
+    tags: string[];
     startDate: string;
     eventCode: string;
     previewImageUrl: string;
@@ -32,4 +32,3 @@ export interface CoreData {
   }
   
   export type EventStatus = "Upcoming" | "Draft" | "Active" | "In Progress" | "Trash";
-  
