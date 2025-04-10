@@ -12,18 +12,42 @@ import {
 import { useEventDetailContext } from "../EventContext/EventDetailContext";
 
 export const GeneralInfo = () => {
-  const { currentEvent } = useEventDetailContext();
-
+  const { currentEvent, dispatch } = useEventDetailContext();
   const [generalInfoForm, setGeneralInfoForm] = useState<GeneralData>({
     ...currentEvent.core.generalData,
   });
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+ 
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    dispatch({
+      type: "GENERAL_DATA",
+      payload: { ...generalInfoForm, [name]: value },
+    });
+  };
+
+  const handleOnChangeTags = (newValue: string[], field : string) => {
+    dispatch({
+      type: "GENERAL_DATA",
+      payload: { ...generalInfoForm, [field]: newValue },
+    });
     setGeneralInfoForm((prevState) => ({
       ...prevState,
-      [name]: value,
+      [field]: newValue,
     }));
+  };
+
+  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setLogoPreview(result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -63,18 +87,13 @@ export const GeneralInfo = () => {
             options={[]}
             freeSolo
             value={generalInfoForm.tags}
-            onChange={(_event, newValue) => {
-              setGeneralInfoForm((prevState) => ({
-                ...prevState,
-                tags: newValue,
-              }));
-            }}
+            onChange={(_e, newValue) => handleOnChangeTags(newValue, "tags")}
             renderTags={(value: string[], getTagProps) =>
               value.map((option, index) => (
                 <Chip
                   {...getTagProps({ index })}
                   sx={{
-                    bgcolor: "#2196f3",
+                    bgcolor: "#7799CC",
                     color: "white",
                     fontWeight: "bold",
                   }}
@@ -141,18 +160,13 @@ export const GeneralInfo = () => {
             options={[]}
             freeSolo
             value={generalInfoForm.gates}
-            onChange={(_event, newValue) => {
-              setGeneralInfoForm((prevState) => ({
-                ...prevState,
-                gates: newValue,
-              }));
-            }}
+            onChange={(_event, newValue) => handleOnChangeTags(newValue, "gates")}
             renderTags={(value: string[], getTagProps) =>
               value.map((option, index) => (
                 <Chip
                   {...getTagProps({ index })}
                   sx={{
-                    bgcolor: "#2196f3",
+                    bgcolor: "#7799CC",
                     color: "white",
                     fontWeight: "bold",
                   }}
@@ -177,10 +191,40 @@ export const GeneralInfo = () => {
           <Typography variant="h6" sx={{ mb: 2, mt: 2 }}>
             Event Logo
           </Typography>
-          <Button variant="outlined" component="label" sx={{ mt: 1 }}>
-            Upload Logo
-            <input type="file" hidden accept="image/*" />
-          </Button>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+            <Button variant="outlined" component="label" sx={{ mt: 1 }}>
+              Upload Logo
+              <input type="file" hidden accept="image/*" onChange={handleLogoUpload} />
+            </Button>
+            
+            {/* Logo Preview */}
+            {logoPreview && (
+              <Box 
+                sx={{ 
+                  mt: 1, 
+                  width: 100, 
+                  height: 100, 
+                  borderRadius: 1, 
+                  overflow: 'hidden',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <img 
+                  src={logoPreview} 
+                  alt="Event Logo Preview" 
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    objectFit: 'contain'
+                  }}
+                />
+              </Box>
+            )}
+          </Box>
         </Grid>
       </Grid>
     </Box>
